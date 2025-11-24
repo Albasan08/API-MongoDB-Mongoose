@@ -3,7 +3,7 @@ const express = require("express");
 const cors = require("cors");
 require("dotenv").config();
 
-const {connection} = require("./src/config/dbConnect.js")
+const {connection} = require("./config/dbConnect.js")
 
 // IMPORTACIONES NUESTRAS
 const app = express();
@@ -22,7 +22,7 @@ app.use(express.urlencoded());
 connection();
 
 // LLamar a la ruta de servicios
-app.use('/api/v1', require ("./src/routes/servicios.routes.js"));
+app.use('/api/v1', require ("./routes/servicios.routes.js"));
 
 /*// GESTIONAR ERROR 404 
 app.use((req, res, next) => {
