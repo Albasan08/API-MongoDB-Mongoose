@@ -13,7 +13,19 @@ const ServicioEsquema = new Schema({
     precio: {
         type: Number,
         required: true
+    },
+    email: {
+        type: String,
+        required: true
+    },
+    descripcion_2: {
+        type: String,
+        required: true
+    },
+    precio_rebajado: {
+        type: Number,
+        required: true
     }
-})
+});
 
 module.exports = model("Servicio", ServicioEsquema);
