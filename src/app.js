@@ -24,19 +24,8 @@ connection();
 // LLamar a la ruta de servicios
 app.use('/api/v1', require ("./routes/servicios.routes.js"));
 
-/*// GESTIONAR ERROR 404 
-app.use((req, res, next) => {
-  return res.status(404).json({ 
-    "ok": "false",
-    "message": "Servicio no encontrado"});
-});
-
-// GESTIONAR ERROR 500
-app.use((err, req, res, next) => {
-  return res.status(500).json({ 
-    "ok": "false",
-    "message": "Error de conexión"});
-});*/ // PONER EN EL PROPIO CONTROLADOR
+// Llamar a la ruta de autentificación
+app.use("/api/v1", require ("./routes/auth.routes.js"));
 
 // Poner al servidor a la escucha - SIEMPRE LA ÚLTIMA
 app.listen(port, () => {
