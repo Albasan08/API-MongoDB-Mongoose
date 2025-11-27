@@ -34,20 +34,29 @@ const crearUsuario = async (req, res) => {
                 nombre,
                 email,
                 password: passwordEncriptada
-            }
+            };
 
-            const user = new User(nuevoUsuario)
+            const user = new User(nuevoUsuario);
 
             // Guardar usuario con la contraseña encriptada
             const usuarioGuardado = await user.save(nuevoUsuario)
-            console.log(usuarioGuardado)
+            // console.log(usuarioGuardado)
+
             // generar token
+            const payload = {
+                uid: usuarioGuardado.id,
+                role: usuarioGuardado.role
+                // NO ENVIAR NUNCA DATOS SENSIBLES
+            };
+
+            const token = await generarToken(payload);
+            console.log(token)
 
             return res.status(201).json({
-            ok: true,
-            mensaje: "Usuario creado correctamente",
-            user: usuarioGuardado
-            //token
+                ok: true,
+                mensaje: "Usuario creado correctamente",
+                user: usuarioGuardado,
+                token
             });
         };
 
@@ -82,28 +91,35 @@ const registrarUsuario = async (req, res) => {
         const passwordOk = bcrypt.compareSync(password, usuarioExiste.password);
             
         if (!passwordOk) {
-            return res.status(400).json({
+            return res.status(401).json({
                 ok: false,
                 mensaje: "La contraseña es incorrecta"
             })
         } else {
 
-            // Generar token - PENDIENTE
-
+            // Generar token
+           const payload = {
+                uid: usuarioExiste._id,
+                nombre: usuarioExiste.nombre,
+                role: usuarioExiste.role
+            }
+            
+            const token = await generarToken(payload);
+            //console.log(token)
+            
             //Crear objeto user
-            /*const user = {
+            const user = {
                 nombre: usuarioExiste.nombre,
                 email: usuarioExiste.email,
                 uid: usuarioExiste._id
-            }*/
+            }
 
-
-            return res.status(400).json({
+            return res.status(200).json({
                 ok: true,
                 mensaje: "Login de usuario hecho",
-                user: usuarioExiste
-                //token
-        })
+                user: user,
+                token
+            })
         }
     } catch (error) {
         console.log(error);
@@ -116,18 +132,44 @@ const registrarUsuario = async (req, res) => {
 
 // RENOVAR TOKEN
 const renovarTokenUsuario = async (req, res) => {
+    try { 
+        // Acceder a nombre y uid
+        const userToken = req.userToken;
+        //console.log(userToken)
+        const {uid, nombre, role} = userToken;
+        //console.log(uid, nombre, role);
 
-    try {
+        // Crear el token
+        const payload = {
+            uid: uid,
+            nombre: nombre,
+            role: role
+        }
 
+        const token = await generarToken(payload);
+        //console.log(token)
+            
+        //Crear objeto user
+        const user = {
+            nombre: nombre,
+            uid: uid,
+            role: role
+        }
+        
         return res.status(200).json({
             ok: true,
-            mensaje: "Token renovado correctamente"
+            mensaje: "Token renovado correctamente",
+            user: {
+                uid,
+                nombre
+            },
+            token
         });
 
     } catch (error) {
         console.log(error);
         return res.status(500).json({
-            ok: true,
+            ok: false,
             mensaje: "Error en la renovación del token, contactar con el administrador del sitio"
         });
         

@@ -19,7 +19,6 @@ const validateInputs = (req, res, next) => {
 
     // Pasa a la siguiente función, en este caso el controlador (por ejemplo, createAService)
     next();
-
 }
 
 module.exports = {validateInputs};

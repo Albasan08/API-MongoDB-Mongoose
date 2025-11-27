@@ -1,10 +1,12 @@
+// REQUERIMIENTOS DE TERCEROS
 const express = require("express");
 const router = express.Router();
 const {check} = require("express-validator");
 
+// REQUERIMIENTOS NUESTROS
 const {crearUsuario, registrarUsuario, renovarTokenUsuario} = require("../controllers/auth.controllers.js")
-
 const {validateInputs} = require("../middlewares/validateinputs.js");
+const {validarTokens} = require("../middlewares/validartokens.js")
 
 // CREAR USUARIO
 router.post('/auth/new', [    
@@ -35,6 +37,6 @@ router.post('/auth/', [
     validateInputs] , registrarUsuario)
 
 // RENOVAR TOKEN USUARIO
-router.get('/auth/renew', /*validarJWT, */renovarTokenUsuario)
+router.get('/auth/renew', [validarTokens], renovarTokenUsuario)
 
 module.exports = router;
