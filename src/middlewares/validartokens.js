@@ -73,11 +73,11 @@ const validarTokens = (req, res, next) => {
         }
   
        req.userToken = userToken;
-        console.log(req.userToken)
+        //console.log(req.userToken)
         next();
 
     } catch(error) {
-        //console.log(error)
+        console.log(error)
         return res.status(401).json({
             ok: false,
             mensaje: 'El token no coincide'
